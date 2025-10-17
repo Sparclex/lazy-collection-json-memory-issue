@@ -12,7 +12,7 @@ Route::get('/generator', function() {
 
 
     $getUsers = function() {
-        foreach(User::query()->limit(100_000)->lazyById() as $user) {
+        foreach(User::cursor() as $user) {
             yield $user->id;
         }
     };
@@ -27,7 +27,7 @@ Route::get('/generator', function() {
 Route::get('/lazy-collection', function() {
 
     $response =  response()->streamJson([
-        'data' => User::query()->limit(100_000)->lazyById()->map->id
+        'data' => User::cursor()->map->id
     ]);
 
     showMemoryUsage($response);
@@ -41,6 +41,6 @@ function showMemoryUsage(StreamedJsonResponse $response): void {
     $response->sendContent();
     echo "</pre>";
     $endUsage = memory_get_usage();
-    echo "\n<p style='color: red; font-size: 18px;'>".  (($endUsage - $usage) / 1024 / 1024)  . 'Mb</p>';
+    echo "\n<p style='color: red; font-size: 18px;'>".  (($endUsage - $usage) / 1024)  . 'kb</p>';
     echo "</html>";
 }

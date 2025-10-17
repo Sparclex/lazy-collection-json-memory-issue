@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-       UserFactory::new()->count(1_000)->create();
+        foreach(range(1, 100) as $i) {
+            UserFactory::new()->count(1000)->create();
+        }
     }
 };
 
